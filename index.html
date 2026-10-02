@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f9fc" />
+    <meta name="description" content="Grid Data 电网数据分析工作台" />
+    <title>Grid Data · 电网数据工作台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#" aria-label="Grid Data 首页">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>grid<span class="brand-accent">data</span></span>
+        </a>
+
+        <div class="workspace-switcher">
+          <span class="workspace-icon">GD</span>
+          <span>
+            <small>当前工作区</small>
+            <strong>华东电网 · 生产</strong>
+          </span>
+          <button class="icon-button compact" aria-label="切换工作区">⌄</button>
+        </div>
+
+        <nav class="main-nav" aria-label="主导航">
+          <p class="nav-label">工作台</p>
+          <a class="nav-item active" href="#overview"><span class="nav-icon">⌂</span>总览</a>
+          <a class="nav-item" href="#assets"><span class="nav-icon">▦</span>资产数据</a>
+          <a class="nav-item" href="#alerts"><span class="nav-icon">◌</span>告警中心 <b class="nav-count">8</b></a>
+          <a class="nav-item" href="#reports"><span class="nav-icon">↗</span>分析报表</a>
+
+          <p class="nav-label section-label">管理</p>
+          <a class="nav-item" href="#sources"><span class="nav-icon">◎</span>数据源</a>
+          <a class="nav-item" href="#team"><span class="nav-icon">♧</span>团队成员</a>
+          <a class="nav-item" href="#settings"><span class="nav-icon">⚙</span>系统设置</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="support-card">
+            <span class="support-orb">?</span>
+            <div><strong>需要帮助？</strong><small>查看使用指南</small></div>
+            <span class="arrow">↗</span>
+          </div>
+          <div class="profile-row">
+            <span class="avatar">LG</span>
+            <span class="profile-copy"><strong>Luoge</strong><small>管理员</small></span>
+            <button class="icon-button compact" aria-label="打开个人菜单">•••</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <button class="mobile-menu icon-button" id="mobileMenu" aria-label="打开导航">☰</button>
+          <div class="breadcrumbs"><span>工作台</span><b>/</b><strong>总览</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button notification-button" aria-label="通知"><span class="notification-dot"></span>♢</button>
+            <button class="icon-button theme-toggle" id="themeToggle" aria-label="切换主题">☼</button>
+            <span class="topbar-divider"></span>
+            <span class="date-label">2024年 06月 28日</span>
+          </div>
+        </header>
+
+        <section class="content-wrapper">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">FRIDAY, JUNE 28, 2024 <span class="live-dot"></span> LIVE</p>
+              <h1>早上好，Luoge <span class="wave">✦</span></h1>
+              <p class="heading-subtitle">这是华东电网今天的运行概况。</p>
+            </div>
+            <button class="primary-button" id="newReport"><span>＋</span> 新建报表</button>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <div class="metric-header"><span>实时总负荷</span><span class="metric-icon green">↗</span></div>
+              <div class="metric-value">42,860 <small>MW</small></div>
+              <div class="metric-footer"><span class="trend positive">↑ 8.4%</span><span>较昨日同期</span></div>
+              <div class="sparkline green-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-header"><span>清洁能源占比</span><span class="metric-icon blue">◇</span></div>
+              <div class="metric-value">68.2 <small>%</small></div>
+              <div class="metric-footer"><span class="trend positive">↑ 3.1%</span><span>较上周平均</span></div>
+              <div class="progress-track"><span style="width: 68.2%"></span></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-header"><span>运行中设备</span><span class="metric-icon purple">▣</span></div>
+              <div class="metric-value">1,284 <small>台</small></div>
+              <div class="metric-footer"><span class="trend neutral">— 0.2%</span><span>共 1,297 台</span></div>
+              <div class="device-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </article>
+            <article class="metric-card warning-card">
+              <div class="metric-header"><span>待处理告警</span><span class="metric-icon orange">!</span></div>
+              <div class="metric-value">08 <small>条</small></div>
+              <div class="metric-footer"><span class="trend negative">↑ 2 条</span><span>需要关注</span></div>
+              <div class="alert-line"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </article>
+          </div>
+
+          <section class="panel data-panel" id="assets">
+            <div class="panel-heading">
+              <div><h2>资产数据</h2><p>查看和管理接入的电网资产</p></div>
+              <div class="panel-actions"><button class="secondary-button" id="refreshData">↻ <span>刷新数据</span></button><button class="icon-button more-button" aria-label="更多操作">•••</button></div>
+            </div>
+            <div class="table-toolbar">
+              <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="搜索资产名称、编号..." /></label>
+              <div class="filter-actions"><button class="filter-button" id="statusFilter">状态：全部 <span>⌄</span></button><button class="filter-button" id="typeFilter">资产类型 <span>⌄</span></button><button class="filter-button" id="exportButton">⇩ <span>导出</span></button></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th class="check-cell"><input id="selectAll" type="checkbox" aria-label="选择全部" /></th><th data-sort="name">资产名称 <span class="sort-mark">↕</span></th><th data-sort="type">资产类型 <span class="sort-mark">↕</span></th><th data-sort="location">所属区域 <span class="sort-mark">↕</span></th><th data-sort="status">运行状态 <span class="sort-mark">↕</span></th><th data-sort="updated">最后更新 <span class="sort-mark">↕</span></th><th></th></tr></thead>
+                <tbody id="assetTableBody"></tbody>
+              </table>
+              <div class="empty-state" id="emptyState" hidden>没有找到匹配的资产</div>
+            </div>
+            <div class="table-footer"><span id="resultCount">显示 1–6 条，共 24 条资产</span><div class="pagination"><button class="page-button" disabled>‹</button><button class="page-button active">1</button><button class="page-button">2</button><button class="page-button">3</button><button class="page-button">4</button><span>...</span><button class="page-button">›</button></div></div>
+          </section>
+        </section>
+        <footer class="footer-note">数据每 5 分钟自动同步一次 <span>·</span> 最后同步于 10:42:16</footer>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
