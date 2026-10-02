@@ -1,6 +1,6 @@
 # Grid Data Web
 
-Grid Data Oracle 电网数据层级目录前端页面。
+Grid Data Oracle 吉达电网数据层级目录前端页面。
 
 ## 本地预览
 
