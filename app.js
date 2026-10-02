@@ -26,7 +26,7 @@ main.innerHTML = `
 
 function currentNode() { return hierarchy.find((node) => node.key === state.selected); }
 function showToast(message) { const toast = document.querySelector("#toast"); toast.textContent = message; toast.classList.add("show"); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200); }
-function statusClass(value) { const text = String(value ?? "").toLowerCase(); if (["运行", "正常", "online", "1"].includes(text)) return "online"; if (["维护中", "检修", "关注", "maintenance"].includes(text)) return "maintenance"; return "offline"; }
+function statusClass(value) { const text = String(value ?? "").toLowerCase(); if (["运行", "正常", "online", "1"].includes(text)) return "online"; if (["维护中", "检修", "关注", "maintenance"].includes(text)) return "maintenance"; if (text.startsWith("状态码")) return "code"; return "offline"; }
 
 function renderTree() {
   const query = document.querySelector("#treeSearch").value.trim().toLowerCase();
@@ -64,7 +64,7 @@ const API_ROOT = configuredApi || window.GRID_DATA_API || "http://172.16.22.229:
 const PROFILE_ID = new URLSearchParams(window.location.search).get("profile") || "jeddah";
 const endpointByNode = { substation: "substations", busbar: "busbars", bay: "bays", feeder: "feeders", equipment: "equipment", signal: "signals" };
 
-function liveStatus(value, runState) { if (value === null || value === undefined || value === "") return runState === null || runState === undefined || runState === "" ? "未配置" : String(runState); return String(value); }
+function liveStatus(value, runState) { const actual = value === null || value === undefined || value === "" ? runState : value; if (actual === null || actual === undefined || actual === "") return "未配置"; return typeof actual === "number" ? `状态码 ${actual}` : String(actual); }
 function mapLiveItem(node, item) {
   const status = liveStatus(item.status, item.run_state);
   const values = { name: item.name ?? "—", code: item.code ?? item.source_id ?? "—", voltage: item.voltage ?? "—", area: item.area ?? "—", status, substation: item.substation ?? "—", bay: item.bay ?? "—", feeder: item.feeder ?? "—", equipment: item.equipment ?? item.owner_name ?? "—", type: item.type ?? item.entity_type ?? "—", signalType: item.signal_type ?? "—" };

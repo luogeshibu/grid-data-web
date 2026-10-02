@@ -48,3 +48,37 @@ body.dark { --bg: #121923; --surface: #1a2431; --surface-soft: #202d3c; --ink: #
 @media (max-width: 900px) { .directory-panel { min-height: 590px; }.tree-panel { width: 220px; flex-basis: 220px; }.directory-stats { grid-template-columns: repeat(2, 1fr); }.hierarchy-hint { flex-wrap: wrap; }.hierarchy-hint small { width: 100%; margin-left: 0; } }
 @media (max-width: 760px) { .directory-stats { gap: 8px; }.directory-stats > div { padding: 10px 12px; }.directory-stats strong { font-size: 16px; }.directory-panel { display: block; }.tree-panel { width: 100%; height: auto; min-height: 0; border-right: 0; border-bottom: 1px solid var(--border); }.tree-heading { padding: 15px 17px 12px; }.tree-list { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 10px; }.tree-node-wrap { flex: 0 0 auto; }.tree-node { width: 137px; }.tree-children { display: none; }.tree-footer { display: none; }.records-heading { align-items: flex-start; flex-direction: column; gap: 14px; padding: 16px; }.record-actions { width: 100%; }.record-actions .secondary-button { flex: 1; }.path-bar, .record-toolbar { padding-left: 16px; padding-right: 16px; }.record-toolbar { flex-wrap: wrap; }.record-toolbar .search-box { width: 100%; }.record-toolbar .filter-button { margin-left: 0; }.hierarchy-flow { overflow-x: auto; max-width: 100%; }.tree-collapsed .tree-panel { width: 100%; }.tree-collapsed .tree-heading div, .tree-collapsed .directory-search, .tree-collapsed .tree-root div, .tree-collapsed .root-status, .tree-collapsed .tree-list, .tree-collapsed .tree-footer { display: initial; }.tree-collapsed .tree-list { display: flex; }.tree-collapsed .tree-heading { justify-content: space-between; }.tree-collapsed .tree-root { justify-content: flex-start; } }
 .tree-node-icon.busbar { color: #4b8bbd; background: #e7f4fb; }
+
+/* Large-screen data workspace: use the available canvas instead of leaving a narrow centered column. */
+@media (min-width: 761px) {
+  body { font-size: 14px; }
+  .sidebar { width: clamp(248px, 15vw, 304px); flex-basis: clamp(248px, 15vw, 304px); padding: 30px 18px 21px; }
+  .brand { font-size: clamp(21px, 1.35vw, 27px); padding: 0 14px 34px; }
+  .topbar { height: clamp(78px, 5vw, 94px); padding-left: clamp(30px, 4vw, 78px); padding-right: clamp(30px, 4vw, 78px); }
+  .content-wrapper { width: 100%; max-width: none; padding: clamp(38px, 4vw, 68px) clamp(30px, 4vw, 82px) 0; }
+  .directory-wrapper { max-width: none; }
+  .footer-note { width: 100%; max-width: none; padding: 22px clamp(30px, 4vw, 82px) 30px; }
+  .page-heading { margin-bottom: clamp(28px, 2.5vw, 45px); }
+  .page-heading h1 { font-size: clamp(32px, 2.5vw, 48px); letter-spacing: -2px; }
+  .heading-subtitle { font-size: 14px; margin-top: 13px; }
+  .eyebrow { font-size: 11px; margin-bottom: 16px; }
+  .connection-state { padding: 11px 15px; font-size: 12px; }
+  .directory-stats { gap: 18px; margin-bottom: 24px; }
+  .directory-stats > div { padding: 18px 22px; min-height: 78px; border-radius: 12px; }
+  .directory-stats span { font-size: 12px; }.directory-stats strong { font-size: clamp(22px, 1.6vw, 30px); }.directory-stats small { font-size: 11px; }
+  .directory-panel { min-height: clamp(590px, 67vh, 820px); border-radius: 15px; }
+  .tree-panel { width: clamp(280px, 18vw, 355px); flex-basis: clamp(280px, 18vw, 355px); }
+  .tree-heading { padding: 26px 23px 20px; }.tree-heading h2 { font-size: 16px; }.tree-heading p { font-size: 10px; }
+  .directory-search { margin: 0 18px 17px; padding: 10px 12px; }.directory-search input { font-size: 12px; }
+  .tree-root { margin: 0 15px 12px; padding: 12px 11px; }.tree-root strong { font-size: 12px; }.tree-root small { font-size: 9px; }
+  .tree-list { padding: 0 15px; }.tree-node { gap: 9px; padding: 13px 10px; }.tree-node-copy strong { font-size: 12px; }.tree-node-copy small { font-size: 9px; }.tree-count { font-size: 11px; }.tree-node-icon { width: 27px; height: 27px; font-size: 15px; }
+  .tree-children { margin-left: 48px; }.tree-child { padding: 8px 6px; font-size: 10px; }
+  .tree-footer { padding: 15px 20px; font-size: 10px; }
+  .records-heading { padding: 27px 30px 22px; }.record-icon { width: 42px; height: 42px; font-size: 21px; }.record-title { gap: 13px; }.record-title h2 { font-size: 18px; }.record-title p { font-size: 12px; }
+  .secondary-button, .filter-button { padding: 10px 14px; font-size: 12px; }.path-bar { padding: 12px 30px; font-size: 10px; }.record-toolbar { padding: 15px 30px; }.record-toolbar .search-box { width: min(420px, 42vw); }.search-box { padding: 10px 13px; }.search-box input { font-size: 12px; }
+  .record-table { min-width: 860px; }.record-table th { font-size: 12px; }.record-table td { font-size: 13px; }.record-table th, .record-table td { padding: 16px 16px; }.record-table th:first-child, .record-table td:first-child { padding-left: 30px; }.record-table th:last-child, .record-table td:last-child { padding-right: 30px; }.mini-record-icon { width: 31px; height: 31px; }.record-name { gap: 11px; }.record-name strong { font-size: 13px; }.record-name small { font-size: 9px; }
+  .status-pill { padding: 5px 9px; font-size: 11px; }.table-footer { padding: 17px 30px; font-size: 11px; }.page-button { width: 30px; height: 30px; }
+  .hierarchy-hint { padding-top: 19px; font-size: 11px; }.hierarchy-flow span { padding: 7px 10px; }.hierarchy-hint small { font-size: 10px; }
+}
+
+.status-pill.code { color: #7d6a9f; background: #f1edf9; }
