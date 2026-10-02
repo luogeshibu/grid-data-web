@@ -28,6 +28,7 @@ main.innerHTML = `
 
 function currentNode() { return hierarchy.find((node) => node.key === state.selected); }
 function showToast(message) { const toast = document.querySelector("#toast"); toast.textContent = message; toast.classList.add("show"); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200); }
+function statusClass(value) { const text = String(value ?? "").toLowerCase(); if (["运行", "正常", "online", "1"].includes(text)) return "online"; if (["维护中", "检修", "关注", "maintenance"].includes(text)) return "maintenance"; return "offline"; }
 
 function renderTree() {
   const query = document.querySelector("#treeSearch").value.trim().toLowerCase();
@@ -44,13 +45,13 @@ function renderRecords() {
   document.querySelector("#recordHead").innerHTML = `<tr><th class="check-cell"><input id="selectRecords" type="checkbox" aria-label="选择全部记录" /></th>${node.columns.map((column) => `<th>${labelMap[column]} <span class="sort-mark">↕</span></th>`).join("")}<th></th></tr>`;
   const query = document.querySelector("#recordSearch").value.trim().toLowerCase();
   const rows = node.rows.filter((row) => row.join(" ").toLowerCase().includes(query));
-  document.querySelector("#recordBody").innerHTML = rows.map((row, rowIndex) => `<tr><td class="check-cell"><input type="checkbox" aria-label="选择第 ${rowIndex + 1} 条记录" /></td>${row.map((cell, index) => index === 0 ? `<td><div class="record-name"><span class="mini-record-icon">${node.icon}</span><div><strong>${cell}</strong><small>${row[1]}</small></div></div></td>` : index === row.length - 1 ? `<td><span class="status-pill ${cell === "运行" || cell === "正常" ? "online" : cell === "维护中" || cell === "检修" || cell === "关注" ? "maintenance" : "offline"}">${cell}</span></td>` : `<td>${cell}</td>`).join("")}<td><button class="row-menu" aria-label="更多操作">•••</button></td></tr>`).join("");
+  document.querySelector("#recordBody").innerHTML = rows.map((row, rowIndex) => `<tr><td class="check-cell"><input type="checkbox" aria-label="选择第 ${rowIndex + 1} 条记录" /></td>${row.map((cell, index) => index === 0 ? `<td><div class="record-name"><span class="mini-record-icon">${node.icon}</span><div><strong>${cell}</strong><small>${row[1]}</small></div></div></td>` : index === row.length - 1 ? `<td><span class="status-pill ${statusClass(cell)}">${cell}</span></td>` : `<td>${cell}</td>`).join("")}<td><button class="row-menu" aria-label="更多操作">•••</button></td></tr>`).join("");
   document.querySelector("#recordEmpty").hidden = rows.length !== 0; document.querySelector("#recordCount").textContent = rows.length ? `显示 1–${rows.length} 条，共 ${node.count.toLocaleString()} 条记录` : "没有匹配记录";
 }
 
 document.querySelector("#treeSearch").addEventListener("input", renderTree);
 document.querySelector("#recordSearch").addEventListener("input", renderRecords);
-document.querySelector("#refreshRecords").addEventListener("click", () => { showToast("Oracle 数据已刷新"); renderRecords(); });
+document.querySelector("#refreshRecords").addEventListener("click", () => { showToast("正在刷新 Oracle 数据"); loadLiveData(); });
 document.querySelector("#columnFilter").addEventListener("click", () => showToast("列筛选功能已准备就绪"));
 document.querySelector("#viewMode").addEventListener("click", () => showToast("当前已是表格视图"));
 document.querySelector("#exportRecords").addEventListener("click", () => { const node = currentNode(); const csv = [node.columns.join(","), ...node.rows.map((row) => row.join(","))].join("\n"); const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" })); link.download = `${node.table}.csv`; link.click(); URL.revokeObjectURL(link.href); showToast(`${node.label}数据已导出`); });
@@ -59,3 +60,39 @@ document.querySelector("#themeToggle").addEventListener("click", () => { documen
 document.querySelector("#mobileMenu").addEventListener("click", () => document.querySelector("#sidebar").classList.toggle("open"));
 document.querySelectorAll(".nav-item").forEach((item) => item.addEventListener("click", () => document.querySelector("#sidebar").classList.remove("open")));
 renderTree(); renderRecords();
+
+const API_ROOT = window.GRID_DATA_API || (window.location.protocol === "file:" ? "http://127.0.0.1:8899/api/v1" : "/api/v1");
+const PROFILE_ID = new URLSearchParams(window.location.search).get("profile") || "jeddah";
+const endpointByNode = { substation: "substations", busbar: "busbars", bay: "bays", feeder: "feeders", equipment: "equipment", signal: "signals" };
+
+function liveStatus(value, runState) { if (value === null || value === undefined || value === "") return runState === null || runState === undefined || runState === "" ? "未配置" : String(runState); return String(value); }
+function mapLiveItem(node, item) {
+  const status = liveStatus(item.status, item.run_state);
+  const values = { name: item.name ?? "—", code: item.code ?? item.source_id ?? "—", voltage: item.voltage ?? "—", area: item.area ?? "—", status, substation: item.substation ?? "—", bay: item.bay ?? "—", feeder: item.feeder ?? "—", equipment: item.equipment ?? item.owner_name ?? "—", type: item.type ?? item.entity_type ?? "—", signalType: item.signal_type ?? "—" };
+  return node.columns.map((column) => values[column]);
+}
+function setConnectionState(connected) {
+  const stateBox = document.querySelector(".connection-state");
+  if (!stateBox) return;
+  stateBox.innerHTML = `<span class="connection-dot"></span><span>${connected ? "已连接" : "演示数据"}</span><b>${connected ? `Oracle / ${PROFILE_ID.toUpperCase()}` : "API 未启动"}</b>`;
+}
+async function loadLiveData() {
+  try {
+    const profileResponse = await fetch(`${API_ROOT}/profiles`);
+    if (!profileResponse.ok) throw new Error(`profiles ${profileResponse.status}`);
+    const profiles = await profileResponse.json();
+    if (!profiles.some((profile) => profile.id === PROFILE_ID)) throw new Error(`profile ${PROFILE_ID} not found`);
+    await Promise.all(hierarchy.map(async (node) => {
+      const response = await fetch(`${API_ROOT}/${PROFILE_ID}/${endpointByNode[node.key]}?offset=0&limit=200`);
+      if (!response.ok) throw new Error(`${node.key} ${response.status}`);
+      const payload = await response.json();
+      node.rows = (payload.items || []).map((item) => mapLiveItem(node, item));
+      node.count = payload.meta?.total ?? node.rows.length;
+    }));
+    setConnectionState(true); renderTree(); renderRecords(); showToast(`已读取 ${PROFILE_ID} 的 Oracle 数据`);
+  } catch (error) {
+    setConnectionState(false); showToast("后端未启动，当前显示演示数据");
+    console.info("Grid Data API unavailable; demo data remains active.", error);
+  }
+}
+loadLiveData();
